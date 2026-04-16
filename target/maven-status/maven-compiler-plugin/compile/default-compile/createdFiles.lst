@@ -5,8 +5,12 @@ fr\project\backoffice\entity\Visa.class
 fr\project\backoffice\entity\Personne.class
 fr\project\backoffice\BackofficeApplication.class
 fr\project\backoffice\controller\VisaController.class
+fr\project\backoffice\entity\Passeport.class
+fr\project\backoffice\entity\SituationFamiliale.class
 fr\project\backoffice\repository\PersonneRepository.class
 fr\project\backoffice\dto\CreateVisaRequestDto.class
 fr\project\backoffice\entity\DemandeVisa.class
 fr\project\backoffice\service\VisaRequestService.class
+fr\project\backoffice\repository\PasseportRepository.class
+fr\project\backoffice\repository\SituationFamilialeRepository.class
 fr\project\backoffice\repository\DemandeVisaRepository.class

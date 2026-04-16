@@ -1,5 +1,6 @@
 package fr.project.backoffice.entity;
 
+import fr.project.backoffice.entity.Passeport;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -24,14 +25,14 @@ public class Personne {
     @Column(name = "nationalite", length = 50)
     private String nationalite;
 
-    @Column(name = "numero_passeport", nullable = false, unique = true, length = 50)
-    private String numeroPasseport;
-
     @Column(name = "email", length = 150)
     private String email;
 
     @Column(name = "telephone", length = 50)
     private String telephone;
+
+    @OneToOne(mappedBy = "personne", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Passeport passeport;
 
     // Getters and setters
     public Long getIdPersonne() {
@@ -74,14 +75,6 @@ public class Personne {
         this.nationalite = nationalite;
     }
 
-    public String getNumeroPasseport() {
-        return numeroPasseport;
-    }
-
-    public void setNumeroPasseport(String numeroPasseport) {
-        this.numeroPasseport = numeroPasseport;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -96,5 +89,17 @@ public class Personne {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public Passeport getPasseport() {
+        return passeport;
+    }
+
+    public void setPasseport(Passeport passeport) {
+        this.passeport = passeport;
+    }
+
+    public String getNumeroPasseport() {
+        return passeport != null ? passeport.getNumeroPasseport() : null;
     }
 }
