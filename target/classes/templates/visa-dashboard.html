@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BackOffice Visa Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/backoffice.css}" />
+</head>
+<body>
+<div class="page-shell">
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">VISA</span>
+            <div>
+                <h1>BackOffice</h1>
+                <p>Visa management dashboard</p>
+            </div>
+        </div>
+        <div class="summary-label">Admin panel</div>
+    </header>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <section class="metrics-grid">
+        <article class="metric-card accent">
+            <p>Total visas</p>
+            <h2 th:text="${totalVisas}">0</h2>
+        </article>
+        <article class="metric-card">
+            <p>Pending requests</p>
+            <h2 th:text="${pendingRequests}">0</h2>
+        </article>
+        <article class="metric-card">
+            <p>Expiring within 30 days</p>
+            <h2 th:text="${expiringSoon}">0</h2>
+        </article>
+        <article class="metric-card">
+            <p>Transformable visas</p>
+            <h2 th:text="${transformableCount}">0</h2>
+        </article>
+    </section>
+
+    <section class="content-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Visa Information</h2>
+                <p>Live summary of visas linked to requests and passport details.</p>
+            </div>
+            <div class="header-actions">
+                <span class="badge">Professional styling</span>
+                <button class="btn-primary" onclick="openModal()">+ Add Visa Request</button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Visa Ref</th>
+                    <th>Applicant</th>
+                    <th>Passport</th>
+                    <th>Visa type</th>
+                    <th>Request type</th>
+                    <th>Status</th>
+                    <th>Expires in</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="visa : ${visas}">
+                    <td th:text="${visa.referenceVisa}">REF-000</td>
+                    <td th:text="${visa.requesterName}">Jane Doe</td>
+                    <td th:text="${visa.passportNumber}">AA000000</td>
+                    <td th:text="${visa.typeVisa}">travailleur</td>
+                    <td th:text="${visa.typeDemande}">transformable</td>
+                    <td>
+                        <span class="status-tag" th:classappend="${visa.statutDemande == 'en_attente'} ? ' pending' : ' active'" th:text="${visa.statutDemande}">en_attente</span>
+                    </td>
+                    <td th:text="${visa.daysToExpire} + ' days'">15 days</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<!-- Modal for Add Visa Request -->
+<div id="visaModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Visa Request</h2>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <form id="visaForm" method="POST" action="/backoffice/visas/add" class="visa-form">
+            <!-- Applicant Information Section -->
+            <div class="form-section">
+                <h3>Applicant Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nom">Last Name *</label>
+                        <input type="text" id="nom" name="nom" required placeholder="Dupont" />
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">First Name *</label>
+                        <input type="text" id="prenom" name="prenom" required placeholder="Jean" />
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dateNaissance">Date of Birth *</label>
+                        <input type="date" id="dateNaissance" name="dateNaissance" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="nationalite">Nationality</label>
+                        <input type="text" id="nationalite" name="nationalite" placeholder="Française" />
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="numeroPasseport">Passport Number *</label>
+                        <input type="text" id="numeroPasseport" name="numeroPasseport" required placeholder="AA123456" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="john@example.com" />
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="telephone">Phone Number</label>
+                    <input type="tel" id="telephone" name="telephone" placeholder="+33 6 12 34 56 78" />
+                </div>
+            </div>
+
+            <!-- Visa Request Section -->
+            <div class="form-section">
+                <h3>Visa Request Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="typeDemande">Request Type *</label>
+                        <select id="typeDemande" name="typeDemande" required onchange="updateVisaType()">
+                            <option value="">-- Select --</option>
+                            <option value="transformable">Transformable</option>
+                            <option value="non_transformable">Non-transformable</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="motif">Purpose of Visit *</label>
+                        <select id="motif" name="motif" required>
+                            <option value="">-- Select --</option>
+                            <option value="travailleur">Work</option>
+                            <option value="investisseur">Investment</option>
+                            <option value="retraite">Retirement</option>
+                            <option value="regroupement_familial">Family Reunion</option>
+                            <option value="stage_mission">Internship/Mission</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visa Details Section -->
+            <div class="form-section">
+                <h3>Visa Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dateExpiration">Expiration Date *</label>
+                        <input type="date" id="dateExpiration" name="dateExpiration" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="estTransformable">
+                            <input type="checkbox" id="estTransformable" name="estTransformable" value="true" />
+                            Transformable Visa
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Create Visa Request</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal() {
+    document.getElementById('visaModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('visaModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+    document.getElementById('visaForm').reset();
+}
+
+function updateVisaType() {
+    const typeDemande = document.getElementById('typeDemande').value;
+    // Can be extended for dynamic behavior
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('visaModal');
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateExpiration').min = today;
+});
+</script>
+</body>
+</html>

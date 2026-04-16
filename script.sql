@@ -28,5 +28,6 @@ CREATE TABLE visa (
     type_visa VARCHAR(20) NOT NULL CHECK (type_visa IN ('transformable','non_transformable','travailleur','etudiant')),
     date_emission DATE NOT NULL DEFAULT CURRENT_DATE,
     date_expiration DATE NOT NULL,
-    est_transformable BOOLEAN DEFAULT FALSE
+    est_transformable BOOLEAN DEFAULT FALSE,
+    reference_visa VARCHAR(100) UNIQUE NOT NULL
 );
