@@ -1,52 +1,110 @@
--- 1. Personne (demandeur)
-CREATE TABLE personne (
-    id_personne SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100) NOT NULL,
-    date_naissance DATE NOT NULL,
-    nationalite VARCHAR(50),
-    email VARCHAR(150),
-    telephone VARCHAR(50)
+CREATE TABLE Nationalite (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL
 );
 
--- 2. Situation familiale
-CREATE TABLE situation_familiale (
-    id_situation_familiale SERIAL PRIMARY KEY,
-    id_personne INT NOT NULL UNIQUE REFERENCES personne(id_personne),
-    statut_familial VARCHAR(50) NOT NULL CHECK (statut_familial IN ('célibataire','marié','divorcé','veuf','pacsé')),
-    adresse VARCHAR(255),
-    nb_enfants INT DEFAULT 0
+CREATE TABLE Situation_familiale (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL
 );
 
--- 3. Passeport
-CREATE TABLE passeport (
-    id_passeport SERIAL PRIMARY KEY,
-    id_personne INT NOT NULL UNIQUE REFERENCES personne(id_personne),
-    numero_passeport VARCHAR(50) UNIQUE NOT NULL,
+CREATE TABLE type_visa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL  -- 'investisseur', 'travailleur'
+);
+
+
+CREATE TABLE Passeport (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_demandeur INT NOT NULL,
+    numero_passeport VARCHAR(50) NOT NULL UNIQUE,
     date_delivrance DATE NOT NULL,
     date_expiration DATE NOT NULL,
-    pays_delivrance VARCHAR(50),
-    type_passeport VARCHAR(50) DEFAULT 'Ordinaire'
+    pays_delivrance VARCHAR(100),
+    FOREIGN KEY (id_demandeur) REFERENCES Demandeur(id)
 );
 
--- 4. Demande de visa (étape administrative)
-CREATE TABLE demande_visa (
-    id_demande SERIAL PRIMARY KEY,
-    id_personne INT NOT NULL REFERENCES personne(id_personne),
-    type_demande VARCHAR(20) NOT NULL CHECK (type_demande IN ('transformable', 'non_transformable')),
-    motif VARCHAR(50) CHECK (motif IN ('travailleur','investisseur','retraite','regroupement_familial','stage_mission')),
-    date_demande TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    statut_demande VARCHAR(30) DEFAULT 'dossier crée'
+CREATE TABLE Statut_passeport (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_passeport INT NOT NULL,
+    statut INT NOT NULL ,-- 'actif', 'expire', 'perdu', 'volee'
+    date_changement_statut DATE,
+    FOREIGN KEY (id_passeport) REFERENCES Passeport(id)
 );
 
--- 5. Visa délivré (résultat de la demande)
-CREATE TABLE visa (
-    id_visa SERIAL PRIMARY KEY,
-    id_personne INT NOT NULL REFERENCES personne(id_personne),
-    id_demande INT NOT NULL REFERENCES demande_visa(id_demande),
-    type_visa VARCHAR(20) NOT NULL CHECK (type_visa IN ('transformable','non_transformable','travailleur','etudiant')),
-    date_emission DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_expiration DATE NOT NULL,
-    est_transformable BOOLEAN DEFAULT FALSE,
-    reference_visa VARCHAR(100) UNIQUE NOT NULL
+CREATE TABLE Visa_transformable(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_demandeur INT NOT NULL,
+    id_passeport INT NOT NULL,
+    numero_reference VARCHAR(50) NOT NULL UNIQUE,
+    FOREIGN KEY (id_demandeur) REFERENCES Demandeur(id),
+    FOREIGN KEY (id_passeport) REFERENCES Passeport(id)
+);
+
+CREATE TABLE Visa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_demande INT NOT NULL,
+    reference VARCHAR(50),
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    id_passeport INT NOT NULL,
+    FOREIGN KEY (id_passeport) REFERENCES Passeport(id),
+    FOREIGN KEY (id_demande) REFERENCES Demande(id)
+);
+
+CREATE TABLE carte_resident(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_demande INT NOT NULL,
+    reference VARCHAR(50),
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    id_passeport INT NOT NULL,
+    FOREIGN KEY (id_demande) REFERENCES Demande(id),
+    FOREIGN KEY (id_passeport) REFERENCES Passeport(id)
+);
+
+CREATE TABLE Demandeur (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL,
+    prenom VARCHAR(50) NOT NULL,
+    date_naissance DATE NOT NULL,
+    lieu_naissance VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    adresse TEXT NOT NULL,
+    
+    id_situation_familiale INT NOT NULL,
+    id_nationalite INT NOT NULL,
+    
+    FOREIGN KEY (id_situation_familiale) REFERENCES Situation_familiale(id),
+    FOREIGN KEY (id_nationalite) REFERENCES Nationalite(id)
+);
+
+CREATE TABLE Type_demande (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL  
+);
+
+
+CREATE TABLE Demande (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_visa_transformable INT NOT NULL,
+    date_demande DATE NOT NULL,
+    id_statut INT NOT NULL,
+    id_demandeur INT NOT NULL,
+    id_type_visa INT NOT NULL,
+    id_type_demande INT NOT NULL,
+    date_traitement DATE,
+    FOREIGN KEY (id_type_demande) REFERENCES Type_demande(id),
+    FOREIGN KEY (id_demandeur) REFERENCES Demandeur(id),
+    FOREIGN KEY (id_type_visa) REFERENCES Type_visa(id),
+    FOREIGN KEY (id_visa_transformable) REFERENCES Visa_transformable(id)
+);
+
+CREATE TABLE Statut_demande (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_demande INT NOT NULL,
+    statut INT NOT NULL,-- 'brouillon', 'soumise', 'en_cours', 'validee', 'rejetee'
+    date_changement_statut DATE,
+    FOREIGN KEY (id_demande) REFERENCES Demande(id)
 );
