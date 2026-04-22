@@ -3,8 +3,8 @@ package fr.project.backoffice.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "situation_familiale")
-public class SituationFamiliale {
+@Table(name = "type_demande")
+public class TypeDemande {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

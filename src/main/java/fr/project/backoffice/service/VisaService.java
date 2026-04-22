@@ -27,19 +27,19 @@ public class VisaService {
 
     private VisaInfoDto toDto(Visa visa) {
         VisaInfoDto dto = new VisaInfoDto();
-        dto.setIdVisa(visa.getIdVisa());
-        dto.setReferenceVisa(visa.getReferenceVisa());
-        dto.setTypeVisa(visa.getTypeVisa());
-        dto.setPassportNumber(visa.getPersonne().getNumeroPasseport());
-        dto.setRequesterName(visa.getPersonne().getPrenom() + " " + visa.getPersonne().getNom());
-        dto.setTypeDemande(visa.getDemandeVisa().getTypeDemande());
-        dto.setMotifDemande(visa.getDemandeVisa().getMotif());
-        dto.setStatutDemande(visa.getDemandeVisa().getStatutDemande());
-        dto.setDateEmission(visa.getDateEmission());
-        dto.setDateExpiration(visa.getDateExpiration());
-        dto.setTransformable(Boolean.TRUE.equals(visa.getEstTransformable()));
+        dto.setIdVisa(visa.getId());
+        dto.setReferenceVisa(visa.getReference());
+        dto.setPassportNumber(visa.getPasseport().getNumeroPasseport());
+        dto.setRequesterName(visa.getPasseport().getDemandeur().getPrenom() + " " + visa.getPasseport().getDemandeur().getNom());
+        dto.setDateEmission(visa.getDateDebut());
+        dto.setDateExpiration(visa.getDateFin());
+        dto.setTransformable(false);
+        dto.setStatutDemande("en cours");
+        dto.setTypeDemande("");
+        dto.setTypeVisa("");
+        dto.setMotifDemande("");
 
-        long daysToExpire = ChronoUnit.DAYS.between(LocalDate.now(), visa.getDateExpiration());
+        long daysToExpire = ChronoUnit.DAYS.between(LocalDate.now(), visa.getDateFin());
         dto.setDaysToExpire(daysToExpire);
 
         return dto;
