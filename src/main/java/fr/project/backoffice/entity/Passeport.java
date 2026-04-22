@@ -9,12 +9,11 @@ public class Passeport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_passeport")
-    private Long idPasseport;
+    private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_personne", nullable = false, unique = true)
-    private Personne personne;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_demandeur", nullable = false)
+    private Demandeur demandeur;
 
     @Column(name = "numero_passeport", nullable = false, unique = true, length = 50)
     private String numeroPasseport;
@@ -25,26 +24,24 @@ public class Passeport {
     @Column(name = "date_expiration", nullable = false)
     private LocalDate dateExpiration;
 
-    @Column(name = "pays_delivrance", length = 50)
+    @Column(name = "pays_delivrance", length = 100)
     private String paysDelivrance;
 
-    @Column(name = "type_passeport", length = 50)
-    private String typePasseport;
-
-    public Long getIdPasseport() {
-        return idPasseport;
+    // Getters and setters
+    public Long getId() {
+        return id;
     }
 
-    public void setIdPasseport(Long idPasseport) {
-        this.idPasseport = idPasseport;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Personne getPersonne() {
-        return personne;
+    public Demandeur getDemandeur() {
+        return demandeur;
     }
 
-    public void setPersonne(Personne personne) {
-        this.personne = personne;
+    public void setDemandeur(Demandeur demandeur) {
+        this.demandeur = demandeur;
     }
 
     public String getNumeroPasseport() {
@@ -77,13 +74,5 @@ public class Passeport {
 
     public void setPaysDelivrance(String paysDelivrance) {
         this.paysDelivrance = paysDelivrance;
-    }
-
-    public String getTypePasseport() {
-        return typePasseport;
-    }
-
-    public void setTypePasseport(String typePasseport) {
-        this.typePasseport = typePasseport;
     }
 }

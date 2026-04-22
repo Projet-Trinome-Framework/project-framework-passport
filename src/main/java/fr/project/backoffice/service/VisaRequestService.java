@@ -1,38 +1,38 @@
 package fr.project.backoffice.service;
 
 import fr.project.backoffice.dto.CreateVisaRequestDto;
-import fr.project.backoffice.entity.DemandeVisa;
+import fr.project.backoffice.entity.Demande;
+import fr.project.backoffice.entity.Demandeur;
 import fr.project.backoffice.entity.Passeport;
-import fr.project.backoffice.entity.Personne;
 import fr.project.backoffice.entity.SituationFamiliale;
 import fr.project.backoffice.entity.Visa;
-import fr.project.backoffice.repository.DemandeVisaRepository;
+import fr.project.backoffice.entity.VisaTransformable;
+import fr.project.backoffice.repository.DemandeRepository;
+import fr.project.backoffice.repository.DemandeurRepository;
 import fr.project.backoffice.repository.PasseportRepository;
-import fr.project.backoffice.repository.PersonneRepository;
 import fr.project.backoffice.repository.SituationFamilialeRepository;
 import fr.project.backoffice.repository.VisaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 public class VisaRequestService {
 
-    private final PersonneRepository personneRepository;
-    private final DemandeVisaRepository demandeVisaRepository;
+    private final DemandeurRepository demandeurRepository;
+    private final DemandeRepository demandeRepository;
     private final VisaRepository visaRepository;
     private final PasseportRepository passeportRepository;
     private final SituationFamilialeRepository situationFamilialeRepository;
 
-    public VisaRequestService(PersonneRepository personneRepository,
-                             DemandeVisaRepository demandeVisaRepository,
+    public VisaRequestService(DemandeurRepository demandeurRepository,
+                             DemandeRepository demandeRepository,
                              VisaRepository visaRepository,
                              PasseportRepository passeportRepository,
                              SituationFamilialeRepository situationFamilialeRepository) {
-        this.personneRepository = personneRepository;
-        this.demandeVisaRepository = demandeVisaRepository;
+        this.demandeurRepository = demandeurRepository;
+        this.demandeRepository = demandeRepository;
         this.visaRepository = visaRepository;
         this.passeportRepository = passeportRepository;
         this.situationFamilialeRepository = situationFamilialeRepository;
@@ -40,56 +40,58 @@ public class VisaRequestService {
 
     @Transactional
     public void createVisaRequest(CreateVisaRequestDto dto) {
-        // Create Personne
-        Personne personne = new Personne();
-        personne.setNom(dto.getNom());
-        personne.setPrenom(dto.getPrenom());
-        personne.setDateNaissance(dto.getDateNaissance());
-        personne.setNationalite(dto.getNationalite());
-        personne.setEmail(dto.getEmail());
-        personne.setTelephone(dto.getTelephone());
-        Personne savedPersonne = personneRepository.save(personne);
-
+        // Create Demandeur
+        Demandeur demandeur = new Demandeur();
+        demandeur.setNom(dto.getNom());
+        demandeur.setPrenom(dto.getPrenom());
+        demandeur.setDateNaissance(dto.getDateNaissance());
+        demandeur.setLieuNaissance(dto.getLieuNaissance());
+        demandeur.setEmail(dto.getEmail());
+        demandeur.setTelephone(dto.getTelephone());
+        demandeur.setAdresse(dto.getAdresse());
+        
         // Create Situation Familiale
         SituationFamiliale situation = new SituationFamiliale();
-        situation.setPersonne(savedPersonne);
-        situation.setStatutFamilial(dto.getSituationFamiliale());
-        situation.setAdresse(dto.getAdresse());
-        situation.setNbEnfants(dto.getNbEnfants() != null ? dto.getNbEnfants() : 0);
-        situationFamilialeRepository.save(situation);
+        situation.setLibelle(dto.getSituationFamiliale());
+        SituationFamiliale savedSituation = situationFamilialeRepository.save(situation);
+        demandeur.setSituationFamiliale(savedSituation);
+        
+        Demandeur savedDemandeur = demandeurRepository.save(demandeur);
 
         // Create Passeport
         Passeport passeport = new Passeport();
-        passeport.setPersonne(savedPersonne);
+        passeport.setDemandeur(savedDemandeur);
         passeport.setNumeroPasseport(dto.getNumeroPasseport());
         passeport.setDateDelivrance(dto.getDateDelivrance());
         passeport.setDateExpiration(dto.getDateExpirationPasseport());
         passeport.setPaysDelivrance(dto.getPaysDelivrance());
-        passeport.setTypePasseport(dto.getTypePasseport());
-        passeportRepository.save(passeport);
+        Passeport savedPasseport = passeportRepository.save(passeport);
 
-        // Create DemandeVisa
-        DemandeVisa demandeVisa = new DemandeVisa();
-        demandeVisa.setPersonne(savedPersonne);
-        demandeVisa.setTypeDemande(dto.getTypeDemande());
-        demandeVisa.setMotif(dto.getMotif());
-        demandeVisa.setDateDemande(LocalDateTime.now());
-        demandeVisa.setStatutDemande("dossier crée");
-        DemandeVisa savedDemande = demandeVisaRepository.save(demandeVisa);
+        // Create VisaTransformable
+        VisaTransformable visaTransformable = new VisaTransformable();
+        visaTransformable.setDemandeur(savedDemandeur);
+        visaTransformable.setPasseport(savedPasseport);
+        visaTransformable.setNumeroReference(generateReferenceVisa(savedDemandeur.getId()));
+
+        // Create Demande
+        Demande demande = new Demande();
+        demande.setVisaTransformable(visaTransformable);
+        demande.setDateDemande(LocalDate.now());
+        demande.setIdStatut(1);
+        demande.setDemandeur(savedDemandeur);
+        Demande savedDemande = demandeRepository.save(demande);
 
         // Create Visa
         Visa visa = new Visa();
-        visa.setPersonne(savedPersonne);
-        visa.setDemandeVisa(savedDemande);
-        visa.setTypeVisa(dto.getTypeDemande().equals("transformable") ? "travailleur" : "etudiant");
-        visa.setDateEmission(LocalDate.now());
-        visa.setDateExpiration(dto.getDateExpiration());
-        visa.setEstTransformable(dto.getEstTransformable());
-        visa.setReferenceVisa(dto.getReferenceVisa() != null ? dto.getReferenceVisa() : generateReferenceVisa(savedPersonne.getIdPersonne()));
+        visa.setDemande(savedDemande);
+        visa.setReference(generateReferenceVisa(savedDemandeur.getId()));
+        visa.setDateDebut(LocalDate.now());
+        visa.setDateFin(dto.getDateExpiration());
+        visa.setPasseport(savedPasseport);
         visaRepository.save(visa);
     }
 
-    private String generateReferenceVisa(Long personneId) {
-        return "VISA-" + personneId + "-" + System.currentTimeMillis();
+    private String generateReferenceVisa(Long demandeurId) {
+        return "VISA-" + demandeurId + "-" + System.currentTimeMillis();
     }
 }

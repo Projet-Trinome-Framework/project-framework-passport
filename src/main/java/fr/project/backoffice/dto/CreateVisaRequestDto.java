@@ -8,6 +8,7 @@ public class CreateVisaRequestDto {
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;
+    private String lieuNaissance;
     private String nationalite;
     private String email;
     private String telephone;
@@ -38,6 +39,9 @@ public class CreateVisaRequestDto {
 
     public LocalDate getDateNaissance() { return dateNaissance; }
     public void setDateNaissance(LocalDate dateNaissance) { this.dateNaissance = dateNaissance; }
+
+    public String getLieuNaissance() { return lieuNaissance; }
+    public void setLieuNaissance(String lieuNaissance) { this.lieuNaissance = lieuNaissance; }
 
     public String getNationalite() { return nationalite; }
     public void setNationalite(String nationalite) { this.nationalite = nationalite; }
