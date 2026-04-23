@@ -1,6 +1,7 @@
 package fr.project.backoffice.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CreateVisaRequestDto {
 
@@ -21,6 +22,9 @@ public class CreateVisaRequestDto {
     private LocalDate dateExpiration;
     private Boolean estTransformable;
     private String referenceVisa;
+
+    // Documents fields
+    private List<Long> documents;
 
     // Getters and Setters
     public String getNom() { return nom; }
@@ -58,4 +62,7 @@ public class CreateVisaRequestDto {
 
     public String getReferenceVisa() { return referenceVisa; }
     public void setReferenceVisa(String referenceVisa) { this.referenceVisa = referenceVisa; }
+
+    public List<Long> getDocuments() { return documents; }
+    public void setDocuments(List<Long> documents) { this.documents = documents; }
 }
