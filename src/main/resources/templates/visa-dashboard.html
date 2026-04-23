@@ -113,6 +113,10 @@
                         <input type="date" id="dateNaissance" name="dateNaissance" required />
                     </div>
                     <div class="form-group">
+                        <label for="lieuNaissance">Place of Birth *</label>
+                        <input type="text" id="lieuNaissance" name="lieuNaissance" required placeholder="Paris" />
+                    </div>
+                    <div class="form-group">
                         <label for="nationalite">Nationality</label>
                         <input type="text" id="nationalite" name="nationalite" placeholder="Française" />
                     </div>
@@ -205,7 +209,7 @@
                     </div>
                     <div class="form-group">
                         <label for="motif">Purpose of Visit *</label>
-                        <select id="motif" name="motif" required>
+                        <select id="motif" name="motif" required onchange="updateDocumentRequirements()">
                             <option value="">-- Select --</option>
                             <option value="travailleur">Work</option>
                             <option value="investisseur">Investment</option>
@@ -234,6 +238,49 @@
                 </div>
             </div>
 
+            <!-- Required Documents Section -->
+            <div class="form-section">
+                <h3>Required Documents</h3>
+                
+                <!-- Common Documents -->
+                <div class="document-category">
+                    <h4>PIÈCES COMMUNES (Common Documents)</h4>
+                    <div class="checkbox-group">
+                        <div th:each="document : ${commonDocuments}" class="checkbox-label">
+                            <input type="checkbox" name="documents[]" th:value="${document.id}" />
+                            <span th:text="${document.libelle}">Document Label</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category-Specific Documents -->
+                <div class="document-category">
+                    <h4>PIÈCES COMPLÉMENTAIRES SELON LA CATÉGORIE DES IMMIGRANTS (Complementary Documents)</h4>
+                    
+                    <!-- Investor Documents -->
+                    <div class="subcategory" id="investor-documents" style="display: none;">
+                        <h5>Investisseur (Investor)</h5>
+                        <div class="checkbox-group">
+                            <div th:each="document : ${investorDocuments}" class="checkbox-label">
+                                <input type="checkbox" name="documents[]" th:value="${document.id}" />
+                                <span th:text="${document.libelle}">Document Label</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Worker Documents -->
+                    <div class="subcategory" id="worker-documents" style="display: none;">
+                        <h5>Travailleur (Worker)</h5>
+                        <div class="checkbox-group">
+                            <div th:each="document : ${workerDocuments}" class="checkbox-label">
+                                <input type="checkbox" name="documents[]" th:value="${document.id}" />
+                                <span th:text="${document.libelle}">Document Label</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Form Actions -->
             <div class="form-actions">
                 <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
@@ -255,9 +302,46 @@ function closeModal() {
     document.getElementById('visaForm').reset();
 }
 
+// Handle form submission to ensure document IDs are properly included
+document.getElementById('visaForm').addEventListener('submit', function(e) {
+    // Get all checked document checkboxes
+    const checkedDocuments = document.querySelectorAll('input[name="documents[]"]:checked');
+    const documentIds = Array.from(checkedDocuments).map(cb => cb.value);
+    
+    // Create hidden inputs for document IDs if they don't exist
+    const existingHiddenInputs = document.querySelectorAll('input[name="documents"]');
+    existingHiddenInputs.forEach(input => input.remove());
+    
+    // Add hidden inputs for each document ID
+    documentIds.forEach(id => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'documents';
+        hiddenInput.value = id;
+        this.appendChild(hiddenInput);
+    });
+});
+
 function updateVisaType() {
     const typeDemande = document.getElementById('typeDemande').value;
     // Can be extended for dynamic behavior
+}
+
+function updateDocumentRequirements() {
+    const motif = document.getElementById('motif').value;
+    const investorDocuments = document.getElementById('investor-documents');
+    const workerDocuments = document.getElementById('worker-documents');
+    
+    // Hide all document sections first
+    investorDocuments.style.display = 'none';
+    workerDocuments.style.display = 'none';
+    
+    // Show relevant documents based on purpose of visit
+    if (motif === 'investisseur') {
+        investorDocuments.style.display = 'block';
+    } else if (motif === 'travailleur') {
+        workerDocuments.style.display = 'block';
+    }
 }
 
 // Close modal when clicking outside

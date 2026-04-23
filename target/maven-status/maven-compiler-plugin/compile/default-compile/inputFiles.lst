@@ -13,6 +13,7 @@ C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Passeport.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\dto\VisaInfoDto.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\DemandePieceJustificativeRepository.java
+C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\controller\DocumentController.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\controller\VisaController.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\NationaliteRepository.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\StatutPasseport.java
@@ -28,6 +29,7 @@ C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\DemandeurRepository.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Visa.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\DemandePieceJustificative.java
+C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\service\DocumentService.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\StatutPasseportRepository.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Demandeur.java
 C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\PasseportRepository.java
