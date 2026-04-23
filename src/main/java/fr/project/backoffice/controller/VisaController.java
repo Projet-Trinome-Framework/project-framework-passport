@@ -2,6 +2,8 @@ package fr.project.backoffice.controller;
 
 import fr.project.backoffice.dto.CreateVisaRequestDto;
 import fr.project.backoffice.dto.VisaInfoDto;
+import fr.project.backoffice.entity.PieceJustificative;
+import fr.project.backoffice.service.DocumentService;
 import fr.project.backoffice.service.VisaRequestService;
 import fr.project.backoffice.service.VisaService;
 import org.springframework.stereotype.Controller;
@@ -19,10 +21,12 @@ public class VisaController {
 
     private final VisaService visaService;
     private final VisaRequestService visaRequestService;
+    private final DocumentService documentService;
 
-    public VisaController(VisaService visaService, VisaRequestService visaRequestService) {
+    public VisaController(VisaService visaService, VisaRequestService visaRequestService, DocumentService documentService) {
         this.visaService = visaService;
         this.visaRequestService = visaRequestService;
+        this.documentService = documentService;
     }
 
     @GetMapping("/visas")
@@ -39,11 +43,19 @@ public class VisaController {
                 .filter(VisaInfoDto::getTransformable)
                 .count();
 
+        // Load documents from database
+        List<PieceJustificative> commonDocuments = documentService.getCommonDocuments();
+        List<PieceJustificative> investorDocuments = documentService.getDocumentsByCategory("investisseur");
+        List<PieceJustificative> workerDocuments = documentService.getDocumentsByCategory("travailleur");
+
         model.addAttribute("visas", visas);
         model.addAttribute("totalVisas", totalVisas);
         model.addAttribute("pendingRequests", pendingRequests);
         model.addAttribute("expiringSoon", expiringSoon);
         model.addAttribute("transformableCount", transformableCount);
+        model.addAttribute("commonDocuments", commonDocuments);
+        model.addAttribute("investorDocuments", investorDocuments);
+        model.addAttribute("workerDocuments", workerDocuments);
 
         return "visa-dashboard";
     }

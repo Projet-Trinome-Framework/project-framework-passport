@@ -9,94 +9,71 @@ public class Visa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_visa")
-    private Long idVisa;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_personne", nullable = false)
-    private Personne personne;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_demande", nullable = false)
-    private DemandeVisa demandeVisa;
+    private Demande demande;
 
-    @Column(name = "type_visa", nullable = false, length = 20)
-    private String typeVisa;
+    @Column(name = "reference", length = 50)
+    private String reference;
 
-    @Column(name = "date_emission", nullable = false)
-    private LocalDate dateEmission;
+    @Column(name = "date_debut", nullable = false)
+    private LocalDate dateDebut;
 
-    @Column(name = "date_expiration", nullable = false)
-    private LocalDate dateExpiration;
+    @Column(name = "date_fin", nullable = false)
+    private LocalDate dateFin;
 
-    @Column(name = "est_transformable")
-    private Boolean estTransformable;
-
-    @Column(name = "reference_visa", nullable = false, unique = true, length = 100)
-    private String referenceVisa;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_passeport", nullable = false)
+    private Passeport passeport;
 
     // Getters and setters
-    public Long getIdVisa() {
-        return idVisa;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdVisa(Long idVisa) {
-        this.idVisa = idVisa;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Personne getPersonne() {
-        return personne;
+    public Demande getDemande() {
+        return demande;
     }
 
-    public void setPersonne(Personne personne) {
-        this.personne = personne;
+    public void setDemande(Demande demande) {
+        this.demande = demande;
     }
 
-    public DemandeVisa getDemandeVisa() {
-        return demandeVisa;
+    public String getReference() {
+        return reference;
     }
 
-    public void setDemandeVisa(DemandeVisa demandeVisa) {
-        this.demandeVisa = demandeVisa;
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
-    public String getTypeVisa() {
-        return typeVisa;
+    public LocalDate getDateDebut() {
+        return dateDebut;
     }
 
-    public void setTypeVisa(String typeVisa) {
-        this.typeVisa = typeVisa;
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
     }
 
-    public LocalDate getDateEmission() {
-        return dateEmission;
+    public LocalDate getDateFin() {
+        return dateFin;
     }
 
-    public void setDateEmission(LocalDate dateEmission) {
-        this.dateEmission = dateEmission;
+    public void setDateFin(LocalDate dateFin) {
+        this.dateFin = dateFin;
     }
 
-    public LocalDate getDateExpiration() {
-        return dateExpiration;
+    public Passeport getPasseport() {
+        return passeport;
     }
 
-    public void setDateExpiration(LocalDate dateExpiration) {
-        this.dateExpiration = dateExpiration;
-    }
-
-    public Boolean getEstTransformable() {
-        return estTransformable;
-    }
-
-    public void setEstTransformable(Boolean estTransformable) {
-        this.estTransformable = estTransformable;
-    }
-
-    public String getReferenceVisa() {
-        return referenceVisa;
-    }
-
-    public void setReferenceVisa(String referenceVisa) {
-        this.referenceVisa = referenceVisa;
+    public void setPasseport(Passeport passeport) {
+        this.passeport = passeport;
     }
 }

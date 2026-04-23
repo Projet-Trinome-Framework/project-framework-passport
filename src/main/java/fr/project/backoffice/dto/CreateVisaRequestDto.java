@@ -1,6 +1,7 @@
 package fr.project.backoffice.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CreateVisaRequestDto {
 
@@ -8,10 +9,18 @@ public class CreateVisaRequestDto {
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;
+    private String lieuNaissance;
     private String nationalite;
-    private String numeroPasseport;
     private String email;
     private String telephone;
+    private String situationFamiliale;
+    private String adresse;
+    private Integer nbEnfants;
+    private String numeroPasseport;
+    private LocalDate dateDelivrance;
+    private LocalDate dateExpirationPasseport;
+    private String paysDelivrance;
+    private String typePasseport;
 
     // Demande Visa fields
     private String typeDemande;
@@ -21,6 +30,9 @@ public class CreateVisaRequestDto {
     private LocalDate dateExpiration;
     private Boolean estTransformable;
     private String referenceVisa;
+
+    // Documents fields
+    private List<Long> documents;
 
     // Getters and Setters
     public String getNom() { return nom; }
@@ -32,17 +44,41 @@ public class CreateVisaRequestDto {
     public LocalDate getDateNaissance() { return dateNaissance; }
     public void setDateNaissance(LocalDate dateNaissance) { this.dateNaissance = dateNaissance; }
 
+    public String getLieuNaissance() { return lieuNaissance; }
+    public void setLieuNaissance(String lieuNaissance) { this.lieuNaissance = lieuNaissance; }
+
     public String getNationalite() { return nationalite; }
     public void setNationalite(String nationalite) { this.nationalite = nationalite; }
 
     public String getNumeroPasseport() { return numeroPasseport; }
     public void setNumeroPasseport(String numeroPasseport) { this.numeroPasseport = numeroPasseport; }
 
+    public LocalDate getDateDelivrance() { return dateDelivrance; }
+    public void setDateDelivrance(LocalDate dateDelivrance) { this.dateDelivrance = dateDelivrance; }
+
+    public LocalDate getDateExpirationPasseport() { return dateExpirationPasseport; }
+    public void setDateExpirationPasseport(LocalDate dateExpirationPasseport) { this.dateExpirationPasseport = dateExpirationPasseport; }
+
+    public String getPaysDelivrance() { return paysDelivrance; }
+    public void setPaysDelivrance(String paysDelivrance) { this.paysDelivrance = paysDelivrance; }
+
+    public String getTypePasseport() { return typePasseport; }
+    public void setTypePasseport(String typePasseport) { this.typePasseport = typePasseport; }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
+
+    public String getSituationFamiliale() { return situationFamiliale; }
+    public void setSituationFamiliale(String situationFamiliale) { this.situationFamiliale = situationFamiliale; }
+
+    public String getAdresse() { return adresse; }
+    public void setAdresse(String adresse) { this.adresse = adresse; }
+
+    public Integer getNbEnfants() { return nbEnfants; }
+    public void setNbEnfants(Integer nbEnfants) { this.nbEnfants = nbEnfants; }
 
     public String getTypeDemande() { return typeDemande; }
     public void setTypeDemande(String typeDemande) { this.typeDemande = typeDemande; }
@@ -58,4 +94,7 @@ public class CreateVisaRequestDto {
 
     public String getReferenceVisa() { return referenceVisa; }
     public void setReferenceVisa(String referenceVisa) { this.referenceVisa = referenceVisa; }
+
+    public List<Long> getDocuments() { return documents; }
+    public void setDocuments(List<Long> documents) { this.documents = documents; }
 }
