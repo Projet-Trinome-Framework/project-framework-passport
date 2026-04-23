@@ -1,6 +1,7 @@
 fr\project\backoffice\entity\VisaTransformable.class
 fr\project\backoffice\entity\PieceJustificative.class
 fr\project\backoffice\entity\TypeDemande.class
+fr\project\backoffice\service\DocumentService.class
 fr\project\backoffice\service\VisaService.class
 fr\project\backoffice\repository\DemandeRepository.class
 fr\project\backoffice\repository\VisaTransformableRepository.class
@@ -21,6 +22,7 @@ fr\project\backoffice\repository\DemandeurRepository.class
 fr\project\backoffice\entity\Demande.class
 fr\project\backoffice\repository\TypeDemandeRepository.class
 fr\project\backoffice\repository\StatutDemandeRepository.class
+fr\project\backoffice\controller\DocumentController$ValidationRequest.class
 fr\project\backoffice\entity\CarteResident.class
 fr\project\backoffice\dto\VisaInfoDto.class
 fr\project\backoffice\entity\Visa.class
@@ -32,3 +34,4 @@ fr\project\backoffice\dto\CreateVisaRequestDto.class
 fr\project\backoffice\repository\PasseportRepository.class
 fr\project\backoffice\repository\TypeVisaRepository.class
 fr\project\backoffice\repository\SituationFamilialeRepository.class
+fr\project\backoffice\controller\DocumentController.class

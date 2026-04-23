@@ -418,6 +418,71 @@ tr:hover {
   color: var(--text);
 }
 
+/* Document Checkboxes Styling */
+.document-category {
+  margin-bottom: 24px;
+  background: rgba(31, 41, 55, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.document-category h4 {
+  margin: 0 0 16px;
+  font-size: 1rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.subcategory {
+  margin-bottom: 20px;
+}
+
+.subcategory:last-child {
+  margin-bottom: 0;
+}
+
+.subcategory h5 {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.checkbox-label:hover {
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
 /* Form Actions */
 .form-actions {
   display: flex;

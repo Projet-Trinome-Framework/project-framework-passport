@@ -67,11 +67,11 @@ public class DemandePieceJustificative {
         this.soumis = soumis;
     }
 
-    public LocalDate getDatesoumission() {
+    public LocalDate getDateSoumission() {
         return datesoumission;
     }
 
-    public void setDatesoumission(LocalDate datesoumission) {
+    public void setDateSoumission(LocalDate datesoumission) {
         this.datesoumission = datesoumission;
     }
 
