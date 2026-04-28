@@ -117,3 +117,9 @@ CREATE TABLE carte_resident (
     FOREIGN KEY (id_demande) REFERENCES demande(id),
     FOREIGN KEY (id_passeport) REFERENCES passeport(id)
 );
+
+-- Insert type_demande values for duplicate requests
+INSERT INTO type_demande (libelle) VALUES
+('transfert_visa_passeport_perdu'),
+('duplicata_carte_resident')
+ON CONFLICT DO NOTHING;
