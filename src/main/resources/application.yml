@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/visadb
+    url: jdbc:postgresql://localhost:5432/visadb
     username: postgres
-    password: BM2541
+    password: postgres
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5

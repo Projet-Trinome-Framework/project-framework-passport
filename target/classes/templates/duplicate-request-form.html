@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duplicate Request - Lost Document</title>
+    <link rel="stylesheet" th:href="@{/css/backoffice.css}" />
+</head>
+<body>
+<div class="page-shell">
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">VISA</span>
+            <div>
+                <h1>BackOffice</h1>
+                <p>Duplicate Request - Lost Document</p>
+            </div>
+        </div>
+        <div class="summary-label">Duplicate Request Form</div>
+    </header>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <section class="content-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Demande de Duplicata</h2>
+                <p>Traitement des cas de perte de passeport ou carte de résident</p>
+            </div>
+        </div>
+
+        <!-- Step 1: Choose Type of Duplicate Request -->
+        <div class="duplicate-form-section">
+            <h3>Étape 1 : Sélectionnez le type de demande</h3>
+            <div class="choice-buttons">
+                <button type="button" class="choice-btn" onclick="selectDuplicateType('passeport_perdu')">
+                    <h4>📄 Passeport Perdu</h4>
+                    <p>Transfert de visa vers le nouveau passeport</p>
+                </button>
+                <button type="button" class="choice-btn" onclick="selectDuplicateType('carte_resident_perdue')">
+                    <h4>🏠 Carte de Résident Perdue</h4>
+                    <p>Demande de duplicata de carte résident</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Search for Existing Applicant -->
+        <div id="searchSection" class="duplicate-form-section" style="display: none;">
+            <h3>Étape 2 : Recherche de l'applicant</h3>
+            <div class="search-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="rechercheMail">Email (optionnel)</label>
+                        <input type="email" id="rechercheMail" placeholder="john@example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label for="rechercheNom">Nom (optionnel)</label>
+                        <input type="text" id="rechercheNom" placeholder="Dupont" />
+                    </div>
+                </div>
+                <button type="button" class="btn-primary" onclick="searchApplicant()">Rechercher</button>
+            </div>
+
+            <!-- Applicant Info Display -->
+            <div id="applicantInfo" class="applicant-info">
+                <h4>Informations de l'applicant trouvé:</h4>
+                <div class="applicant-info-row">
+                    <span class="applicant-info-label">Nom:</span>
+                    <span id="infoNom"></span>
+                </div>
+                <div class="applicant-info-row">
+                    <span class="applicant-info-label">Prénom:</span>
+                    <span id="infoPrenom"></span>
+                </div>
+                <div class="applicant-info-row">
+                    <span class="applicant-info-label">Email:</span>
+                    <span id="infoEmail"></span>
+                </div>
+                <div class="applicant-info-row">
+                    <span class="applicant-info-label">Passeport actuel:</span>
+                    <span id="infoPasseport"></span>
+                </div>
+                <div class="applicant-info-row">
+                    <span class="applicant-info-label">Expiration passeport:</span>
+                    <span id="infoExpirationPasseport"></span>
+                </div>
+                <div class="form-toggle">
+                    <label>
+                        <input type="radio" name="applicantChoice" value="existing" checked> Utiliser ces données
+                    </label>
+                    <label>
+                        <input type="radio" name="applicantChoice" value="new"> Remplir les données from scratch
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Form for New Applicant or Complete Data -->
+        <div id="formSection" class="duplicate-form-section" style="display: none;">
+            <h3 id="formTitle">Étape 3 : Informations du demandeur</h3>
+
+            <form id="duplicateForm" method="POST" action="" class="visa-form">
+                <input type="hidden" id="typesDuplicate" name="typesDuplicate" />
+                <input type="hidden" id="idDemandeurExistant" name="idDemandeurExistant" />
+
+                <!-- Applicant Information Section -->
+                <div class="form-section">
+                    <h3>Informations du demandeur</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nom">Nom *</label>
+                            <input type="text" id="nom" name="nom" required placeholder="Dupont" />
+                        </div>
+                        <div class="form-group">
+                            <label for="prenom">Prénom *</label>
+                            <input type="text" id="prenom" name="prenom" required placeholder="Jean" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="dateNaissance">Date de naissance *</label>
+                            <input type="date" id="dateNaissance" name="dateNaissance" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="lieuNaissance">Lieu de naissance *</label>
+                            <input type="text" id="lieuNaissance" name="lieuNaissance" required placeholder="Paris" />
+                        </div>
+                        <div class="form-group">
+                            <label for="nationalite">Nationalité</label>
+                            <input type="text" id="nationalite" name="nationalite" placeholder="Française" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="john@example.com" />
+                        </div>
+                        <div class="form-group">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone" placeholder="+33 6 12 34 56 78" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="situationFamiliale">Situation familiale</label>
+                            <select id="situationFamiliale" name="situationFamiliale">
+                                <option value="">-- Sélectionner --</option>
+                                <option value="célibataire">Célibataire</option>
+                                <option value="marié">Marié</option>
+                                <option value="divorcé">Divorcé</option>
+                                <option value="veuf">Veuf</option>
+                                <option value="pacsé">Pacsé</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="adresse">Adresse</label>
+                        <input type="text" id="adresse" name="adresse" placeholder="123 Rue de Paris, Paris" />
+                    </div>
+                </div>
+
+                <!-- Passport Details Section -->
+                <div class="form-section">
+                    <h3>Informations du passeport perdu</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="numeroPasseport">Numéro du passeport perdu *</label>
+                            <input type="text" id="numeroPasseport" name="numeroPasseport" required placeholder="AA123456" />
+                        </div>
+                        <div class="form-group">
+                            <label for="paysDelivrance">Pays de délivrance</label>
+                            <input type="text" id="paysDelivrance" name="paysDelivrance" placeholder="France" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="dateDelivrance">Date de délivrance *</label>
+                            <input type="date" id="dateDelivrance" name="dateDelivrance" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="dateExpirationPasseport">Date d'expiration *</label>
+                            <input type="date" id="dateExpirationPasseport" name="dateExpirationPasseport" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Passport Section (Only for Lost Passport Case) -->
+                <div id="newPassportSection" class="form-section" style="display: none;">
+                    <h3>Informations du nouveau passeport</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nouveauNumeroPasseport">Nouveau numéro de passeport *</label>
+                            <input type="text" id="nouveauNumeroPasseport" name="nouveauNumeroPasseport" placeholder="AA123456" />
+                        </div>
+                        <div class="form-group">
+                            <label for="dateDelivranceNouveauPasseport">Date de délivrance du nouveau passeport *</label>
+                            <input type="date" id="dateDelivranceNouveauPasseport" name="dateDelivranceNouveauPasseport" />
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="dateExpirationNouveauPasseport">Date d'expiration du nouveau passeport *</label>
+                        <input type="date" id="dateExpirationNouveauPasseport" name="dateExpirationNouveauPasseport" />
+                    </div>
+                </div>
+
+                <!-- Required Documents Section -->
+                <div class="form-section">
+                    <h3>Documents requis</h3>
+                    
+                    <!-- Common Documents -->
+                    <div class="document-category">
+                        <h4>PIÈCES COMMUNES (Pièces obligatoires)</h4>
+                        <div class="checkbox-group">
+                            <div th:each="document : ${commonDocuments}" class="checkbox-label">
+                                <input type="checkbox" name="documents" th:value="${document.id}" />
+                                <span th:text="${document.libelle}">Document Label</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="resetForm()">Annuler</button>
+                    <button type="submit" class="btn-primary">Soumettre la demande</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<script>
+let selectedDuplicateType = null;
+let foundApplicant = null;
+
+function selectDuplicateType(type) {
+    selectedDuplicateType = type;
+    
+    // Update button styles
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.closest('.choice-btn').classList.add('active');
+    
+    // Show search section
+    document.getElementById('searchSection').style.display = 'block';
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('typesDuplicate').value = type;
+    
+    // Show new passport section only for lost passport case
+    if (type === 'passeport_perdu') {
+        document.getElementById('newPassportSection').style.display = 'block';
+    } else {
+        document.getElementById('newPassportSection').style.display = 'none';
+    }
+    
+    // Set form action
+    const form = document.getElementById('duplicateForm');
+    if (type === 'passeport_perdu') {
+        form.action = '/backoffice/duplicates/visa-transfer';
+    } else {
+        form.action = '/backoffice/duplicates/resident-card-duplicate';
+    }
+}
+
+function searchApplicant() {
+    const email = document.getElementById('rechercheMail').value;
+    const nom = document.getElementById('rechercheNom').value;
+
+    if (!email && !nom) {
+        alert('Veuillez entrer un email ou un nom');
+        return;
+    }
+
+    fetch('/backoffice/duplicates/search-applicant', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `email=${encodeURIComponent(email)}&nom=${encodeURIComponent(nom)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data) {
+            foundApplicant = data;
+            displayApplicantInfo(data);
+        } else {
+            alert('Aucun applicant trouvé. Veuillez remplir les informations manuellement.');
+            document.getElementById('applicantInfo').classList.remove('show');
+            clearFormFields();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erreur lors de la recherche');
+    });
+}
+
+function displayApplicantInfo(applicant) {
+    document.getElementById('infoNom').textContent = applicant.nom || '';
+    document.getElementById('infoPrenom').textContent = applicant.prenom || '';
+    document.getElementById('infoEmail').textContent = applicant.email || '';
+    document.getElementById('infoPasseport').textContent = applicant.numeroPasseportActuel || 'N/A';
+    document.getElementById('infoExpirationPasseport').textContent = applicant.dateExpirationPasseportActuel || 'N/A';
+    
+    document.getElementById('applicantInfo').classList.add('show');
+    
+    // Pre-fill form with found applicant data
+    prefillForm(applicant);
+    document.getElementById('idDemandeurExistant').value = applicant.id;
+}
+
+function prefillForm(applicant) {
+    document.getElementById('nom').value = applicant.nom || '';
+    document.getElementById('prenom').value = applicant.prenom || '';
+    document.getElementById('dateNaissance').value = applicant.dateNaissance || '';
+    document.getElementById('lieuNaissance').value = applicant.lieuNaissance || '';
+    document.getElementById('nationalite').value = applicant.nationalite || '';
+    document.getElementById('email').value = applicant.email || '';
+    document.getElementById('telephone').value = applicant.telephone || '';
+    document.getElementById('situationFamiliale').value = applicant.situationFamiliale || '';
+    document.getElementById('adresse').value = applicant.adresse || '';
+    document.getElementById('numeroPasseport').value = applicant.numeroPasseportActuel || '';
+}
+
+function clearFormFields() {
+    document.getElementById('duplicateForm').reset();
+    document.getElementById('idDemandeurExistant').value = '';
+}
+
+function resetForm() {
+    clearFormFields();
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById('searchSection').style.display = 'none';
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('applicantInfo').classList.remove('show');
+    selectedDuplicateType = null;
+    foundApplicant = null;
+}
+
+// Form submission
+document.getElementById('duplicateForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (selectedDuplicateType === 'passeport_perdu') {
+        // Validate new passport fields
+        if (!document.getElementById('nouveauNumeroPasseport').value ||
+            !document.getElementById('dateDelivranceNouveauPasseport').value ||
+            !document.getElementById('dateExpirationNouveauPasseport').value) {
+            alert('Veuillez remplir tous les champs du nouveau passeport');
+            return;
+        }
+    }
+    
+    this.submit();
+});
+</script>
+</body>
+</html>

@@ -1,36 +1,40 @@
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\SituationFamiliale.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\DemandeRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\TypeDemande.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\StatutDemandeRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\SituationFamilialeRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\TypeVisaRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\service\VisaRequestService.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\VisaTransformable.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\CarteResident.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\PieceJustificative.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\TypeDemandeRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\dto\CreateVisaRequestDto.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Passeport.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\dto\VisaInfoDto.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\DemandePieceJustificativeRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\controller\DocumentController.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\controller\VisaController.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\NationaliteRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\StatutPasseport.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\StatutDemande.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\TypeVisa.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\service\VisaService.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\VisaTransformableRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\BackofficeApplication.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Nationalite.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\VisaRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Demande.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\CarteResidentRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\DemandeurRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Visa.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\DemandePieceJustificative.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\service\DocumentService.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\StatutPasseportRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\entity\Demandeur.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\PasseportRepository.java
-C:\Users\BM\Documents\GitHub\Framework\projet-trinome-framework\src\main\java\fr\project\backoffice\repository\PieceJustificativeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\VisaTransformableRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\DemandePieceJustificativeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\PasseportRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\CarteResidentRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\NationaliteRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\controller\DuplicateRequestController.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\dto\DuplicateRequestDto.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\DemandeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\StatutPasseportRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\TypeVisaRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\TypeVisa.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\VisaTransformable.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\Demandeur.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\StatutDemandeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\dto\CreateVisaRequestDto.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\Demande.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\StatutPasseport.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\service\VisaService.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\Nationalite.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\TypeDemandeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\VisaRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\PieceJustificative.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\service\DocumentService.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\TypeDemande.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\PieceJustificativeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\controller\VisaController.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\CarteResident.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\dto\VisaInfoDto.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\Passeport.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\SituationFamiliale.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\BackofficeApplication.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\DemandeurRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\repository\SituationFamilialeRepository.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\service\DuplicateRequestService.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\StatutDemande.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\Visa.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\entity\DemandePieceJustificative.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\service\VisaRequestService.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\dto\DemandeurSearchResultDto.java
+C:\Users\WINDOWS 11\Documents\GitHub\project-framework-passport\src\main\java\fr\project\backoffice\controller\DocumentController.java
