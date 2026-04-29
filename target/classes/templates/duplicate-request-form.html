@@ -5,119 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Duplicate Request - Lost Document</title>
     <link rel="stylesheet" th:href="@{/css/backoffice.css}" />
-    <style>
-        .duplicate-form-section {
-            margin: 30px 0;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #f9f9f9;
-        }
-
-        .choice-buttons {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .choice-btn {
-            flex: 1;
-            padding: 20px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        .choice-btn:hover {
-            border-color: #007bff;
-            background: #f0f7ff;
-        }
-
-        .choice-btn.active {
-            border-color: #007bff;
-            background: #007bff;
-            color: white;
-        }
-
-        .search-section {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        .applicant-info {
-            background: #e8f4f8;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            display: none;
-        }
-
-        .applicant-info.show {
-            display: block;
-        }
-
-        .applicant-info-row {
-            margin: 10px 0;
-        }
-
-        .applicant-info-label {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .conditional-section {
-            display: none;
-        }
-
-        .conditional-section.show {
-            display: block;
-        }
-
-        .form-toggle {
-            margin: 20px 0;
-        }
-
-        .toggle-btn {
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .hidden-form {
-            display: none;
-        }
-
-        .hidden-form.show {
-            display: block;
-        }
-
-        .alert {
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
 </head>
 <body>
 <div class="page-shell">
@@ -199,8 +86,12 @@
                     <span id="infoExpirationPasseport"></span>
                 </div>
                 <div class="form-toggle">
-                    <input type="radio" name="applicantChoice" value="existing" checked> Utiliser ces données
-                    <input type="radio" name="applicantChoice" value="new"> Remplir les données from scratch
+                    <label>
+                        <input type="radio" name="applicantChoice" value="existing" checked> Utiliser ces données
+                    </label>
+                    <label>
+                        <input type="radio" name="applicantChoice" value="new"> Remplir les données from scratch
+                    </label>
                 </div>
             </div>
         </div>
