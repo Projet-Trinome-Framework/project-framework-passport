@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BackOffice Operations Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/backoffice.css}" />
+</head>
+<body>
+<div class="page-shell">
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">OPS</span>
+            <div>
+                <h1>Operations Management</h1>
+                <p>Duplicata and Transfer operations dashboard</p>
+            </div>
+        </div>
+        <div class="summary-label">Operations panel</div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">🌙</span>
+            <span id="themeText">Dark</span>
+        </button>
+    </header>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <section class="metrics-grid">
+        <article class="metric-card accent">
+            <p>Pending Operations</p>
+            <h2 th:text="${#lists.size(pendingOperations)}">0</h2>
+        </article>
+        <article class="metric-card">
+            <p>Duplicata Requests</p>
+            <h2>0</h2>
+        </article>
+        <article class="metric-card">
+            <p>Transfer Requests</p>
+            <h2>0</h2>
+        </article>
+        <article class="metric-card">
+            <p>Approved Today</p>
+            <h2>0</h2>
+        </article>
+    </section>
+
+    <section class="content-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Operations Management</h2>
+                <p>Track and manage duplicata and transfer operations.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-secondary" onclick="goToLostCases()">
+                    🔑 Lost Cases
+                </button>
+                <button class="btn-secondary" onclick="goToVisas()">
+                    ← Back to Visa Dashboard
+                </button>
+                <button class="btn-primary" onclick="openOperationModal()">+ New Operation</button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Type</th>
+                    <th>Original Demand</th>
+                    <th>New Demand</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(pendingOperations)}">
+                    <td colspan="7" class="no-data">No pending operations</td>
+                </tr>
+                <tr th:each="operation : ${pendingOperations}">
+                    <td th:text="${operation.reference}">REF-001</td>
+                    <td th:text="${operation.typeOperation.libelle}">Duplicata</td>
+                    <td>
+                        <span th:if="${operation.demandeOriginale != null}" 
+                              th:text="'DEMANDE-' + ${operation.demandeOriginale.id}">DEMANDE-001</span>
+                        <span th:if="${operation.demandeOriginale == null}" class="no-original">No Original</span>
+                    </td>
+                    <td th:text="'DEMANDE-' + ${operation.demandeNouvelle.id}">DEMANDE-002</td>
+                    <td th:text="${#temporals.format(operation.dateOperation, 'yyyy-MM-dd')}">2024-01-01</td>
+                    <td>
+                        <span class="status-tag" th:classappend="${operation.statut == 'en_attente'} ? ' pending' : ' active'" th:text="${operation.statut}">en_attente</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-success btn-sm" 
+                                    th:onclick="'approveOperation(' + ${operation.id} + ')'">
+                                Approve
+                            </button>
+                            <button class="btn-danger btn-sm" 
+                                    th:onclick="'rejectOperation(' + ${operation.id} + ')'">
+                                Reject
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+            </section>
+        </main>
+    </div>
+
+    <!-- New Operation Modal -->
+    <div id="operationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Operation</h2>
+                <button class="modal-close" onclick="closeOperationModal()">&times;</button>
+            </div>
+
+            <form id="operationForm" method="POST" action="/backoffice/operations/create-form" class="operation-form">
+                <div class="form-section">
+                    <h3>Operation Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="idTypeOperation">Operation Type *</label>
+                            <select id="idTypeOperation" name="idTypeOperation" required>
+                                <option value="">Select Type</option>
+                                <option value="1">Duplicata</option>
+                                <option value="2">Transfer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="idDemandeOriginale">Original Demand ID (Optional)</label>
+                            <input type="number" id="idDemandeOriginale" name="idDemandeOriginale" 
+                                   placeholder="Leave empty if no original demand" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="motifOperation">Motif</label>
+                        <textarea id="motifOperation" name="motifOperation" rows="3" 
+                                  placeholder="Reason for this operation..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoApprouver" name="autoApprouver" />
+                            Auto-approve if no original demand exists
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeOperationModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Operation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Approval/Rejection Modal -->
+    <div id="decisionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="decisionModalTitle">Operation Decision</h2>
+                <button class="modal-close" onclick="closeDecisionModal()">&times;</button>
+            </div>
+
+            <form id="decisionForm" class="decision-form">
+                <input type="hidden" id="decisionOperationId" name="operationId" />
+                <input type="hidden" id="decisionAction" name="action" />
+                
+                <div class="form-group">
+                    <label for="approuvePar">Approved By *</label>
+                    <input type="text" id="approuvePar" name="approuvePar" required 
+                           placeholder="Your name" />
+                </div>
+                
+                <div class="form-group" id="rejectionReasonGroup" style="display: none;">
+                    <label for="rejectionReason">Rejection Reason *</label>
+                    <textarea id="rejectionReason" name="rejectionReason" rows="3" required
+                              placeholder="Reason for rejection..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeDecisionModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="decisionSubmitBtn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openOperationModal() {
+            document.getElementById('operationModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOperationModal() {
+            document.getElementById('operationModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('operationForm').reset();
+        }
+
+        function openDecisionModal(operationId, action) {
+            document.getElementById('decisionOperationId').value = operationId;
+            document.getElementById('decisionAction').value = action;
+            
+            const title = action === 'approve' ? 'Approve Operation' : 'Reject Operation';
+            document.getElementById('decisionModalTitle').textContent = title;
+            
+            const rejectionGroup = document.getElementById('rejectionReasonGroup');
+            const submitBtn = document.getElementById('decisionSubmitBtn');
+            
+            if (action === 'approve') {
+                rejectionGroup.style.display = 'none';
+                submitBtn.textContent = 'Approve';
+                submitBtn.className = 'btn-primary';
+            } else {
+                rejectionGroup.style.display = 'block';
+                submitBtn.textContent = 'Reject';
+                submitBtn.className = 'btn-danger';
+            }
+            
+            document.getElementById('decisionModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDecisionModal() {
+            document.getElementById('decisionModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('decisionForm').reset();
+        }
+
+        function approveOperation(operationId) {
+            openDecisionModal(operationId, 'approve');
+        }
+
+        function rejectOperation(operationId) {
+            openDecisionModal(operationId, 'reject');
+        }
+
+        function goToVisas() {
+            window.location.href = '/backoffice/visas';
+        }
+
+        function goToLostCases() {
+            window.location.href = '/backoffice/lost-cases';
+        }
+
+        // Theme switching functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button appearance
+            if (newTheme === 'dark') {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            } else {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            }
+        }
+
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            body.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'dark') {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            } else {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            }
+        });
+
+        // Handle decision form submission
+        document.getElementById('decisionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const operationId = document.getElementById('decisionOperationId').value;
+            const action = document.getElementById('decisionAction').value;
+            const approuvePar = document.getElementById('approuvePar').value;
+            const rejectionReason = document.getElementById('rejectionReason').value;
+            
+            const formData = new FormData();
+            formData.append('approuvePar', approuvePar);
+            if (action === 'reject') {
+                formData.append('motif', rejectionReason);
+            }
+            
+            const url = action === 'approve' 
+                ? `/backoffice/operations/approve-form/${operationId}`
+                : `/backoffice/operations/reject-form/${operationId}`;
+            
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Reload the page to show updated data
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing the operation');
+            });
+        });
+
+        // Handle auto-approve checkbox
+        document.getElementById('autoApprouver').addEventListener('change', function() {
+            const originalDemandInput = document.getElementById('idDemandeOriginale');
+            if (this.checked) {
+                originalDemandInput.placeholder = 'Will be auto-approved if left empty';
+            } else {
+                originalDemandInput.placeholder = 'Leave empty if no original demand';
+            }
+        });
+    </script>
+</body>
+</html>
