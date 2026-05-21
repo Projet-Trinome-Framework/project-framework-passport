@@ -28,6 +28,7 @@ public class VisaService {
     private VisaInfoDto toDto(Visa visa) {
         VisaInfoDto dto = new VisaInfoDto();
         dto.setIdVisa(visa.getId());
+        dto.setDemandeId(visa.getDemande().getId());
         dto.setReferenceVisa(visa.getReference());
         dto.setPassportNumber(visa.getPasseport().getNumeroPasseport());
         dto.setRequesterName(visa.getPasseport().getDemandeur().getPrenom() + " " + visa.getPasseport().getDemandeur().getNom());

@@ -65,6 +65,7 @@
                     <th>Request type</th>
                     <th>Status</th>
                     <th>Expires in</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,6 +79,7 @@
                         <span class="status-tag" th:classappend="${visa.statutDemande == 'en_attente'} ? ' pending' : ' active'" th:text="${visa.statutDemande}">en_attente</span>
                     </td>
                     <td th:text="${visa.daysToExpire} + ' days'">15 days</td>
+                    <td><button type="submit"><a th:href="@{/backoffice/documents/upload/{id}(id=${visa.demandeId})}">View Documents</a></button></td>
                 </tr>
                 </tbody>
             </table>

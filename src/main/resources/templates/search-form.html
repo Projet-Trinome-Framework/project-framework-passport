@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Demandes - Sprint 4</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px 20px;
+        }
+        
+        .container-search {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card-search {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            padding: 50px;
+            margin-bottom: 30px;
+        }
+        
+        .search-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .search-subtitle {
+            color: #999;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        
+        .search-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .search-tab {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+        
+        .search-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .search-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #f0f1ff;
+        }
+        
+        .btn-search {
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .results-container {
+            margin-top: 30px;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .result-item:hover {
+            background: #f0f1ff;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .result-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .result-status {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .result-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 13px;
+            color: #666;
+            margin: 12px 0;
+        }
+        
+        .result-info-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result-info-label {
+            color: #999;
+        }
+        
+        .result-info-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .result-actions button {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .result-actions button:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-search">
+        <div class="card-search">
+            <h1 class="search-title"><i class="fas fa-search"></i> Rechercher une Demande</h1>
+            <p class="search-subtitle">Trouvez vos demandes par numéro ou passeport</p>
+            
+            <!-- Search Tabs -->
+            <div class="search-tabs">
+                <div class="search-tab active" onclick="switchTab('request')">
+                    <i class="fas fa-hashtag"></i> Par Numéro
+                </div>
+                <div class="search-tab" onclick="switchTab('passport')">
+                    <i class="fas fa-passport"></i> Par Passeport
+                </div>
+            </div>
+            
+            <!-- Search by Request Number -->
+            <div id="request-search" class="search-input-group">
+                <input type="text" id="request-input" class="search-input" 
+                       placeholder="Entrez le numéro de demande...">
+                <button class="btn-search" onclick="searchRequest()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <!-- Search by Passport -->
+            <div id="passport-search" class="search-input-group" style="display: none;">
+                <input type="text" id="passport-input" class="search-input" 
+                       placeholder="Entrez le numéro de passeport...">
+                <button class="btn-search" onclick="searchPassport()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="card-search results-container" id="results" style="display: none;">
+            <h3 style="margin-bottom: 20px;">Résultats de Recherche</h3>
+            <div id="results-list"></div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.search-input-group').forEach(g => g.style.display = 'none');
+            
+            if (tab === 'request') {
+                document.querySelectorAll('.search-tab')[0].classList.add('active');
+                document.getElementById('request-search').style.display = 'flex';
+            } else {
+                document.querySelectorAll('.search-tab')[1].classList.add('active');
+                document.getElementById('passport-search').style.display = 'flex';
+            }
+        }
+
+        function searchRequest() {
+            const requestNumber = document.getElementById('request-input').value;
+            if (!requestNumber) return;
+
+            fetch(`/api/frontoffice/search/request/${requestNumber}`)
+                .then(res => res.json())
+                .then(data => displayResults(data));
+        }
+
+        function searchPassport() {
+            const passeportNumber = document.getElementById('passport-input').value;
+            if (!passeportNumber) return;
+
+            fetch(`/api/frontoffice/search/passport/${passeportNumber}`)
+                .then(res => res.json())
+                .then(data => displayResults(data));
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            const resultsList = document.getElementById('results-list');
+            
+            if (!results || results.length === 0) {
+                resultsList.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon"><i class="fas fa-inbox"></i></div>
+                        <p>Aucune demande trouvée</p>
+                    </div>
+                `;
+                resultsDiv.style.display = 'block';
+                return;
+            }
+
+            resultsList.innerHTML = results.map(r => `
+                <div class="result-item">
+                    <div class="result-header">
+                        <span class="result-name">${r.demandeurNom} ${r.demandeurPrenom}</span>
+                        <span class="result-status">${r.statut}</span>
+                    </div>
+                    <div class="result-info">
+                        <div class="result-info-item">
+                            <span class="result-info-label">Demande #</span>
+                            <span class="result-info-value">${r.requestNumber}</span>
+                        </div>
+                        <div class="result-info-item">
+                            <span class="result-info-label">Visa</span>
+                            <span class="result-info-value">${r.typeVisa}</span>
+                        </div>
+                        <div class="result-info-item">
+                            <span class="result-info-label">Type</span>
+                            <span class="result-info-value">${r.typeDemande}</span>
+                        </div>
+                        <div class="result-info-item">
+                            <span class="result-info-label">Date</span>
+                            <span class="result-info-value">${r.dateDemande}</span>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button onclick="viewDetails(${r.demandeId})">
+                            <i class="fas fa-eye"></i> Détails
+                        </button>
+                        <button onclick="downloadDoc(${r.demandeId})">
+                            <i class="fas fa-download"></i> Documents
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            resultsDiv.style.display = 'block';
+        }
+
+        function viewDetails(demandeId) {
+            window.location.href = `/backoffice/demande/${demandeId}`;
+        }
+
+        function downloadDoc(demandeId) {
+            alert('Téléchargement de la demande ' + demandeId);
+        }
+    </script>
+</body>
+</html>

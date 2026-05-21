@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class VisaInfoDto {
 
     private Long idVisa;
+    private Long demandeId;
     private String referenceVisa;
     private String typeVisa;
     private String passportNumber;
@@ -23,6 +24,14 @@ public class VisaInfoDto {
 
     public void setIdVisa(Long idVisa) {
         this.idVisa = idVisa;
+    }
+
+    public Long getDemandeId() {
+        return demandeId;
+    }
+
+    public void setDemandeId(Long demandeId) {
+        this.demandeId = demandeId;
     }
 
     public String getReferenceVisa() {

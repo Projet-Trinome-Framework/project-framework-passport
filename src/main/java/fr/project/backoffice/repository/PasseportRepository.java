@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface PasseportRepository extends JpaRepository<Passeport, Long> {
-    Optional<Passeport> findByNumeroPasseport(String numeroPasseport);
+    List<Passeport> findByNumeroPasseport(String numeroPasseport);
     List<Passeport> findByDemandeur(Demandeur demandeur);
 }

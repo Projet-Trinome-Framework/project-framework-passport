@@ -138,8 +138,11 @@ public class DuplicateRequestService {
     @Transactional
     public void createVissaTransferRequest(DuplicateRequestDto dto) {
         Demandeur demandeur = getDemandeur(dto);
-        Passeport ancienPasseport = passeportRepository.findByNumeroPasseport(dto.getNumeroPasseport())
-                .orElseThrow(() -> new IllegalArgumentException("Ancien passeport non trouvé"));
+        List<Passeport> passports = passeportRepository.findByNumeroPasseport(dto.getNumeroPasseport());
+        if (passports.isEmpty()) {
+            throw new IllegalArgumentException("Ancien passeport non trouvé");
+        }
+        Passeport ancienPasseport = passports.get(0);
 
         // Create new passport
         Passeport nouveauPasseport = new Passeport();
@@ -213,8 +216,11 @@ public class DuplicateRequestService {
     @Transactional
     public void createCarteResidentDuplicateRequest(DuplicateRequestDto dto) {
         Demandeur demandeur = getDemandeur(dto);
-        Passeport passeport = passeportRepository.findByNumeroPasseport(dto.getNumeroPasseport())
-                .orElseThrow(() -> new IllegalArgumentException("Passeport non trouvé"));
+        List<Passeport> passports = passeportRepository.findByNumeroPasseport(dto.getNumeroPasseport());
+        if (passports.isEmpty()) {
+            throw new IllegalArgumentException("Passeport non trouvé");
+        }
+        Passeport passeport = passports.get(0);
 
         // Get existing resident card
         List<CarteResident> cartesExistantes = carteResidentRepository.findAll().stream()

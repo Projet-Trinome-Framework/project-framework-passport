@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Téléchargement de Documents - Sprint 3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        
+        .container-main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .card-upload {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .card-header-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            color: white;
+            text-align: center;
+        }
+        
+        .card-header-custom h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card-header-custom p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .card-body-custom {
+            padding: 40px;
+        }
+        
+        .document-section {
+            margin-bottom: 30px;
+        }
+        
+        .piece-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .piece-item:hover {
+            background: #f0f1ff;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        .piece-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .piece-title .badge {
+            margin-left: 10px;
+            background: #667eea;
+        }
+        
+        .piece-description {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+        
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            color: #667eea;
+        }
+        
+        .file-input-label:hover {
+            background: #f0f1ff;
+            border-color: #764ba2;
+        }
+        
+        .file-input-label.dragging {
+            background: #e8e9ff;
+            border-color: #764ba2;
+        }
+        
+        .file-name {
+            margin-top: 8px;
+            padding: 8px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 6px;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .file-name.active {
+            display: block;
+        }
+        
+        .progress-upload {
+            margin-top: 10px;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            background: #e0e0e0;
+            display: none;
+        }
+        
+        .progress-upload.active {
+            display: block;
+        }
+        
+        .progress-upload .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+        }
+        
+        .btn-custom {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary-custom {
+            background: #f0f1ff;
+            color: #667eea;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #e8e9ff;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background: #e7f3ff;
+            color: #0066cc;
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .extracted-text {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            margin-top: 8px;
+        }
+        
+        .action-buttons {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-buttons .btn-sm {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .summary-card h4 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .summary-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        
+        .summary-stat:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .card-header-custom {
+                padding: 30px 20px;
+            }
+            
+            .card-body-custom {
+                padding: 20px;
+            }
+            
+            .card-header-custom h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-main">
+        <div class="card-upload">
+            <!-- Header -->
+            <div class="card-header-custom">
+                <h1><i class="fas fa-file-upload"></i> Téléchargement de Documents</h1>
+                <p>Demande #<span th:text="${demande.id}"></span></p>
+            </div>
+            
+            <!-- Body -->
+            <div class="card-body-custom">
+                <div class="document-section">
+                    <h5 style="color: #333; font-weight: 600; margin-bottom: 20px;">
+                        <i class="fas fa-list-check"></i> Pièces Justificatives Requises
+                    </h5>
+                    
+                    <div th:each="piece : ${pieces}" class="piece-item">
+                        <div class="piece-title">
+                            <i class="fas fa-file"></i> 
+                            <span th:text="${piece.libelle}" style="margin-left: 10px;"></span>
+                            <span th:if="${piece.obligatoire}" class="badge bg-danger">Obligatoire</span>
+                        </div>
+                        <p class="piece-description" th:text="${piece.description}"></p>
+                        
+                        <div class="file-input-wrapper">
+                            <input type="file" class="file-input" 
+                                   th:id="'file-' + ${piece.id}"
+                                   th:data-piece-id="${piece.id}"
+                                   accept=".pdf,.jpg,.jpeg,.png">
+                            <label th:for="'file-' + ${piece.id}" class="file-input-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span style="margin-left: 8px;">Cliquez ou déposez un fichier</span>
+                            </label>
+                            <div th:id="'filename-' + ${piece.id}" class="file-name"></div>
+                            <div th:id="'progress-' + ${piece.id}" class="progress-upload">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div th:id="'status-' + ${piece.id}" class="status-badge" style="display: none;"></div>
+                            <div th:id="'text-' + ${piece.id}" class="extracted-text" style="display: none;"></div>
+                        </div>
+                        
+                        <div th:id="'actions-' + ${piece.id}" class="action-buttons" style="display: none;">
+                            <button class="btn btn-sm btn-primary-custom" 
+                                    th:onclick="'deleteFile(' + ${piece.id} + ')'">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                            <button class="btn btn-sm btn-secondary-custom" 
+                                    th:onclick="'processFile(' + ${piece.id} + ')'">
+                                <i class="fas fa-cogs"></i> Traiter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Summary -->
+                <div class="summary-card">
+                    <h4><i class="fas fa-chart-pie"></i> Résumé du Téléchargement</h4>
+                    <div class="summary-stat">
+                        <span>Fichiers téléchargés:</span>
+                        <strong id="uploaded-count">0</strong>
+                    </div>
+                    <div class="summary-stat">
+                        <span>Fichiers traités:</span>
+                        <strong id="processed-count">0</strong>
+                    </div>
+                    <div class="summary-stat">
+                        <span>Erreurs:</span>
+                        <strong id="error-count" style="color: #d32f2f;">0</strong>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 12px; margin-top: 30px;">
+                    <button class="btn btn-custom btn-primary-custom" style="flex: 1;" onclick="submitDocuments()">
+                        <i class="fas fa-check-circle"></i> Valider la Soumission
+                    </button>
+                    <a href="/backoffice/dashboard" class="btn btn-custom btn-secondary-custom" style="flex: 1;">
+                        <i class="fas fa-arrow-left"></i> Retour au Tableau de Bord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const demandeId = [[${demande.id}]];
+        let uploadedFiles = new Map();
+
+        document.querySelectorAll('.file-input').forEach(input => {
+            const wrapper = input.parentElement;
+            const label = wrapper.querySelector('.file-input-label');
+            
+            // File input change
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFileUpload(file, input);
+                }
+            });
+            
+            // Drag and drop
+            label.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                label.classList.add('dragging');
+            });
+            
+            label.addEventListener('dragleave', () => {
+                label.classList.remove('dragging');
+            });
+            
+            label.addEventListener('drop', (e) => {
+                e.preventDefault();
+                label.classList.remove('dragging');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    input.files = e.dataTransfer.files;
+                    handleFileUpload(file, input);
+                }
+            });
+        });
+
+        function handleFileUpload(file, input) {
+            const pieceId = input.dataset.pieceId;
+            const fileName = input.id.replace('file-', '');
+            const filenameEl = document.getElementById('filename-' + pieceId);
+            const progressEl = document.getElementById('progress-' + pieceId);
+            const statusEl = document.getElementById('status-' + pieceId);
+            const actionsEl = document.getElementById('actions-' + pieceId);
+
+            filenameEl.textContent = '📄 ' + file.name;
+            filenameEl.classList.add('active');
+            progressEl.classList.add('active');
+            statusEl.textContent = 'En cours...';
+            statusEl.className = 'status-badge status-processing';
+            statusEl.style.display = 'inline-block';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Simulate progress
+            const progressBar = progressEl.querySelector('.progress-bar');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 30;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+            }, 100);
+
+            // Upload
+            fetch(`/backoffice/documents/upload/${demandeId}/${pieceId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                
+                uploadedFiles.set(pieceId, data);
+                
+                if (data.scanStatus === 'COMPLETED') {
+                    statusEl.textContent = '✓ Scan Terminé';
+                    statusEl.className = 'status-badge status-completed';
+                    
+                    const textEl = document.getElementById('text-' + pieceId);
+                    textEl.textContent = data.extractedText || 'Aucun texte extrait';
+                    textEl.style.display = 'block';
+                } else if (data.scanStatus === 'FAILED') {
+                    statusEl.textContent = '✗ Erreur';
+                    statusEl.className = 'status-badge status-error';
+                }
+                
+                actionsEl.style.display = 'flex';
+                updateSummary();
+            })
+            .catch(err => {
+                clearInterval(interval);
+                statusEl.textContent = '✗ Erreur de téléchargement';
+                statusEl.className = 'status-badge status-error';
+                console.error('Error:', err);
+            });
+        }
+
+        function deleteFile(pieceId) {
+            if (uploadedFiles.has(pieceId)) {
+                const docId = uploadedFiles.get(pieceId).id;
+                fetch(`/backoffice/documents/${docId}`, { method: 'DELETE' })
+                    .then(() => {
+                        uploadedFiles.delete(pieceId);
+                        document.getElementById('filename-' + pieceId).classList.remove('active');
+                        document.getElementById('text-' + pieceId).style.display = 'none';
+                        document.getElementById('actions-' + pieceId).style.display = 'none';
+                        document.getElementById('status-' + pieceId).style.display = 'none';
+                        updateSummary();
+                    });
+            }
+        }
+
+        function processFile(pieceId) {
+            if (uploadedFiles.has(pieceId)) {
+                const docId = uploadedFiles.get(pieceId).id;
+                const statusEl = document.getElementById('status-' + pieceId);
+                statusEl.textContent = 'Traitement en cours...';
+                statusEl.className = 'status-badge status-processing';
+
+                fetch(`/backoffice/documents/process/${docId}`, { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        uploadedFiles.set(pieceId, data);
+                        if (data.scanStatus === 'COMPLETED') {
+                            statusEl.textContent = '✓ Scan Terminé';
+                            statusEl.className = 'status-badge status-completed';
+                            const textEl = document.getElementById('text-' + pieceId);
+                            textEl.textContent = data.extractedText;
+                            textEl.style.display = 'block';
+                        }
+                        updateSummary();
+                    });
+            }
+        }
+
+        function updateSummary() {
+            document.getElementById('uploaded-count').textContent = uploadedFiles.size;
+            const processed = Array.from(uploadedFiles.values()).filter(f => f.scanStatus === 'COMPLETED').length;
+            document.getElementById('processed-count').textContent = processed;
+        }
+
+        function submitDocuments() {
+            if (uploadedFiles.size === 0) {
+                alert('Veuillez télécharger au moins un document avant de soumettre.');
+                return;
+            }
+
+            fetch(`/backoffice/documents/submit/${demandeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    // Redirect to dashboard
+                    window.location.href = '/backoffice/dashboard';
+                } else if (data.error) {
+                    alert('Erreur: ' + data.error);
+                }
+            })
+            .catch(err => {
+                alert('Erreur lors de la soumission: ' + err.message);
+                console.error('Error:', err);
+            });
+        }
+    </script>
+</body>
+</html>
